@@ -8,8 +8,10 @@ import time
 import random
 import socks  # SockiPy module
 import stem.process
+import os
 from stem.util import term
 from datetime import date
+
 
 exits = ["us","ca","mx","jp","gb","kr","fr"]
 
@@ -30,7 +32,8 @@ def query(url):
     return "Unable to reach %s" % url
 
 def open_tor():						#sets up a new connection and tests the ip address
-	exitcode = exits[random.randint(0,5)]
+	#exitcode = exits[random.randint(0,5)]
+	exitcode = "us"
   	tor_process = stem.process.launch_tor_with_config(
 	    config = {
 	      'SocksPort': str(SOCKS_PORT),
@@ -56,26 +59,30 @@ def newconnection():
 	updatestack()
 	ip = open_tor()
 	while ip in ipstack:
-		tor_process.kill()
+		os.system("killall tor")
 		ip = open_tor() #make sure we're not using the same ips within a single hour
+		print "changing ip, because this one is still banned\n"
 	ipstack.append(ip)
 	timestack.append(time.time())
 	print "switched up to %s\n" %ip
 
 def fuckemup():
+	tic = 1
 	for i in range(1,20):
 		if i == 1:
 			newconnection() #start a whole new thing
 		if i % 5 == 0:	#reached the threshold where ban will be placed	
-			tor_process.kill()
+			os.system("killall tor")
 			newconnection()
 		pingurl = API_URL % i
 		response = query(pingurl)
 		match = re.search('investor\":true',response)
 		if match: #if indeed an investor
-			f = open("%i.txt", 'w')
+			f = open("pages/%i.txt"%tic, 'w')
 			f.write(response)
 			f.close()
 			print "finished id#%i\n"%i
+			tic = tic+1
 fuckemup()
+os.system("killall tor") #shutdown call
 
