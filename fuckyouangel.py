@@ -13,7 +13,7 @@ from stem.util import term
 from datetime import date
 
 
-exits = ["us","ca","mx","jp","gb","kr","fr"]
+exits = ["us","ca"]
 
 ipstack = [] #stacks used to track the ip and time it was last banned
 timestack = []
@@ -32,8 +32,7 @@ def query(url):
     return "Unable to reach %s" % url
 
 def open_tor():						#sets up a new connection and tests the ip address
-	#exitcode = exits[random.randint(0,5)]
-	exitcode = "us"
+	exitcode = exits[random.randint(0,1)]
   	tor_process = stem.process.launch_tor_with_config(
 	    config = {
 	      'SocksPort': str(SOCKS_PORT),
@@ -41,8 +40,8 @@ def open_tor():						#sets up a new connection and tests the ip address
 	    }
     )
 	ip = query("https://www.atagar.com/echo.php")
-	ip = re.search('\d+\.\d+\.\d+\.\d+',ip)
-	ip = ip.group(0)
+	# ip = re.search('\d+\.\d+\.\d+\.\d+',ip)
+	# ip = ip.group(0)
 	return ip
 
 
@@ -68,16 +67,16 @@ def newconnection():
 
 def fuckemup():
 	tic = 1
-	for i in range(1,20):
+	for i in range(1,3000):
 		if i == 1:
 			newconnection() #start a whole new thing
-		if i % 5 == 0:	#reached the threshold where ban will be placed	
+		if i % 900 == 0:	#reached the threshold where ban will be placed	
 			os.system("killall tor")
 			newconnection()
 		pingurl = API_URL % i
 		response = query(pingurl)
-		match = re.search('investor\":true',response)
-		if match: #if indeed an investor
+		if "investor\":true" in response:
+		# if match: #if indeed an investor
 			f = open("pages/%i.txt"%tic, 'w')
 			f.write(response)
 			f.close()
