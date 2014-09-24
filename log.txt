@@ -1,0 +1,15 @@
+[1mStarting Tor:
+[0m
+[34mSep 24 14:29:37.000 [notice] Bootstrapped 80%: Connecting to the Tor network.[0m
+[34mSep 24 14:29:39.000 [notice] Bootstrapped 85%: Finishing handshake with first hop.[0m
+[34mSep 24 14:29:39.000 [notice] Bootstrapped 90%: Establishing a Tor circuit.[0m
+[34mSep 24 14:29:42.000 [notice] Bootstrapped 100%: Done.[0m
+[1m
+Checking our endpoint:
+[0m
+[34mIP Address: 72.52.91.30 (72.52.91.30:13490)
+Locale: US
+[0m
+
+Checking our endpoint:
+
