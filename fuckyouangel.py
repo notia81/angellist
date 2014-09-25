@@ -50,9 +50,11 @@ def updatestack(): #removes ip addresses that are no longer blacklisted
 	currenttime = time.time()
 	if not timestack: #while it's empty
 		return 0
-	while currenttime-timestack[0] >= 3600:
-		timestack.remove()
-		ipstack.remove()
+	lasttime = timestack[0]
+	while currenttime-lasttime >= 3600:
+		timestack.pop(0)	
+		ipstack.pop(0)
+		lasttime=timestack.pop(0)
 
 def newconnection():
 	updatestack()
@@ -82,6 +84,8 @@ def fuckemup():
 			f.close()
 			print "finished id#%i\n"%i
 			tic = tic+1
+		else:
+			print "tossed out id#%i\n"%i
 fuckemup()
 os.system("killall tor") #shutdown call
 
