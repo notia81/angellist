@@ -18,6 +18,8 @@ exits = ["us","ca"]
 ipstack = [] #stacks used to track the ip and time it was last banned
 timestack = []
 
+ipstack.append(99999)
+timestack.append(float("inf"))
 
 SOCKS_PORT = 7000
 API_URL = "https://api.angel.co/1/users/%i"
@@ -51,10 +53,12 @@ def updatestack(): #removes ip addresses that are no longer blacklisted
 	if not timestack: #while it's empty
 		return 0
 	lasttime = timestack[0]
-	while currenttime-lasttime >= 3600:
+	point = ipstack[0]
+	while currenttime-lasttime >= 3600 and point != 99999:
 		timestack.pop(0)	
 		ipstack.pop(0)
-		lasttime=timestack.pop(0)
+		point = ipstack[0]
+		lasttime=timestack[0]
 
 def newconnection():
 	updatestack()
