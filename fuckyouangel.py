@@ -53,10 +53,11 @@ def updatestack(): #removes ip addresses that are no longer blacklisted
 	if len(timestack)==1: #while it's empty
 		return 0
 	lasttime = timestack[1] #not empty
-	while currenttime-lasttime >= 60 and len(timestack)!=1:
+	while currenttime-lasttime >= 3600 and len(timestack)!=1:
 		timestack.pop(1)	
 		ipstack.pop(1)
-		lasttime=timestack[1]
+		if len(timestack)!=1:
+			lasttime=timestack[1]
 
 def newconnection():
 	updatestack()
@@ -71,10 +72,10 @@ def newconnection():
 
 def fuckemup():
 	tic = 1
-	for i in range(1,3000):
+	for i in range(1,778178): #max number of 778178
 		if i == 1:
 			newconnection() #start a whole new thing
-		if i % 5 == 0:	#reached the threshold where ban will be placed	
+		if i % 900 == 0:	#reached the threshold where ban will be placed	
 			os.system("killall tor")
 			newconnection()
 		pingurl = API_URL % i
