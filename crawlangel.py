@@ -94,7 +94,7 @@ try:
 	mup()
 except IOError:
 	os.system("killall tor") #if it crahses
-	fuckemup()
+	mup()
 
 os.system("killall tor") #shutdown call
 
