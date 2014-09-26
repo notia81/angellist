@@ -50,15 +50,13 @@ def open_tor():						#sets up a new connection and tests the ip address
 
 def updatestack(): #removes ip addresses that are no longer blacklisted
 	currenttime = time.time()
-	if not timestack: #while it's empty
+	if len(timestack)==1: #while it's empty
 		return 0
-	lasttime = timestack[0]
-	point = ipstack[0]
-	while currenttime-lasttime >= 3600 and point != 99999:
-		timestack.pop(0)	
-		ipstack.pop(0)
-		point = ipstack[0]
-		lasttime=timestack[0]
+	lasttime = timestack[1] #not empty
+	while currenttime-lasttime >= 60 and len(timestack)!=1:
+		timestack.pop(1)	
+		ipstack.pop(1)
+		lasttime=timestack[1]
 
 def newconnection():
 	updatestack()
@@ -76,7 +74,7 @@ def fuckemup():
 	for i in range(1,3000):
 		if i == 1:
 			newconnection() #start a whole new thing
-		if i % 900 == 0:	#reached the threshold where ban will be placed	
+		if i % 5 == 0:	#reached the threshold where ban will be placed	
 			os.system("killall tor")
 			newconnection()
 		pingurl = API_URL % i
