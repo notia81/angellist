@@ -72,10 +72,11 @@ def newconnection():
 
 def fuckemup():
 	tic = 1
+	response = ''
 	for i in range(1,778178): #max number of 778178
 		if i == 1:
 			newconnection() #start a whole new thing
-		if i % 900 == 0:	#reached the threshold where ban will be placed	
+		if i % 900 ==0 or "Unable to reach" in response:	#reached the threshold where ban will be placed, or there was an issue with the last connection
 			os.system("killall tor")
 			newconnection()
 		pingurl = API_URL % i
