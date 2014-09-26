@@ -90,6 +90,11 @@ def fuckemup():
 			tic = tic+1
 		else:
 			print "tossed out id#%i\n"%i
-fuckemup()
+try:
+	fuckemup()
+except IOError:
+	os.system("killall tor") #if it crahses
+	fuckemup()
+
 os.system("killall tor") #shutdown call
 
