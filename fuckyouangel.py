@@ -42,7 +42,7 @@ def open_tor():						#sets up a new connection and tests the ip address
 	    }
     )
 	ip = query("https://www.atagar.com/echo.php")
-	# ip = re.search('\d+\.\d+\.\d+\.\d+',ip)
+	# ip = re.search('\d+\.\d+\.\d+\.\d+',ip) # regex is too slow on python
 	# ip = ip.group(0)
 	return ip
 
