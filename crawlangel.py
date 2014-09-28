@@ -74,13 +74,21 @@ def mup():
 	tic = 1
 	response = ''
 	for i in range(1,778178): #max number of 778178
-		if i == 1:
-			newconnection() #start a whole new thing
-		if i % 900 ==0 or "Unable to reach" in response:	#reached the threshold where ban will be placed, or there was an issue with the last connection
-			os.system("killall tor")
-			newconnection()
-		pingurl = API_URL % i
-		response = query(pingurl) #choke point **
+		success = 0
+		while success == 0:
+			try:
+				if i == 1:
+					newconnection() #start a whole new thing
+				if i % 900 ==0 or "Unable to reach" in response:	#reached the threshold where ban will be placed, or there was an issue with the last connection
+					os.system("killall tor")
+					newconnection()
+				pingurl = API_URL % i
+				response = query(pingurl) #choke point **
+				success = 1
+			except:
+				time.sleep(10)
+				os.system("killall tor")
+				success = 0
 		if "investor\":true" in response:
 		# if match: #if indeed an investor
 			f = open("pages/%i.txt"%tic, 'w')
