@@ -73,7 +73,8 @@ def newconnection():
 def mup():
 	tic = 1
 	response = ''
-	for i in range(1,778178): #max number of 778178
+	update = 17896 #as of 09/30/14 19:41 
+	for i in range(update,778178): #max number of 778178 
 		success = 0
 		while success == 0:
 			try:
@@ -86,8 +87,10 @@ def mup():
 				response = query(pingurl) #choke point **
 				success = 1
 			except:
+				print "failed to start tor, will pause and reset"
 				time.sleep(10)
 				os.system("killall tor")
+				print "reset tor...now process will begin again for %i" %i
 				success = 0
 		if "investor\":true" in response:
 		# if match: #if indeed an investor
