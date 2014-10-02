@@ -46,7 +46,13 @@ def open_tor():						#sets up a new connection and tests the ip address
 	# ip = ip.group(0)
 	return ip
 
+def open_vpn(): #a lot faster
+	os.system('vpn -s > ~/github/connect.txt')
+	ip = query("https://www.atagar.com/echo.php")
+	return ip
 
+def kill_vpn():
+	os.system('vpn -s > ~/github/disconnect.txt')
 
 def updatestack(): #removes ip addresses that are no longer blacklisted
 	currenttime = time.time()
@@ -70,27 +76,39 @@ def newconnection():
 	timestack.append(time.time())
 	print "switched up to %s\n" %ip
 
+def newmcgillconnect():
+	updatestack()
+	ip = open_vpn()
+	while ip in ipstack:
+		kill_vpn()
+		ip = open_vpn() #make sure we're not using the same ips within a single hour
+		print "changing ip, because this one is still banned\n"
+	ipstack.append(ip)
+	timestack.append(time.time())
+	print "switched up to %s\n" %ip
+
+
 def mup():
 	tic = 1
 	response = ''
-	update = 17896 #as of 09/30/14 19:41 
+	update = 1 #update to match last 
 	for i in range(update,778178): #max number of 778178 
 		success = 0
 		while success == 0:
 			try:
 				if i == 1:
-					newconnection() #start a whole new thing
+					newmcgillconnection() #start a whole new thing
 				if i % 900 ==0 or "Unable to reach" in response:	#reached the threshold where ban will be placed, or there was an issue with the last connection
-					os.system("killall tor")
-					newconnection()
+					kill_vpn()
+					newmcgillconnection()
 				pingurl = API_URL % i
 				response = query(pingurl) #choke point **
 				success = 1
 			except:
 				print "failed to start tor, will pause and reset"
 				time.sleep(10)
-				os.system("killall tor")
-				print "reset tor...now process will begin again for %i" %i
+				kill_vpn()
+				print "reset mcgill vpn...now process will begin again for %i" %i
 				success = 0
 		if "investor\":true" in response:
 		# if match: #if indeed an investor
@@ -101,11 +119,12 @@ def mup():
 			tic = tic+1
 		else:
 			print "tossed out id#%i\n"%i
-try:
-	mup()
-except IOError:
-	os.system("killall tor") #if it crahses
-	mup()
+# try:
+# 	mup()
+# except IOError:
+# 	os.system("killall tor") #if it crahses
+# 	mup()
 
-os.system("killall tor") #shutdown call
+# os.system("killall tor") #shutdown call
 
+mup()
