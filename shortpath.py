@@ -59,8 +59,8 @@ def newconnection(status):
 	timestack.append(time.time())
 
 def crawl():
-	matched = 1 #updated:
-	start = 1 #updated:
+	matched = 7747 #updated:
+	start = 75686 #updated:
 	response = ''
 	status = get_status()
 	for i in range(start,778178):
@@ -72,9 +72,13 @@ def crawl():
 		pingurl = API_URL % i
 		response = query(pingurl)
 		print response
+		while "You are currently over your rate limit" in response:
+			print "time to switch\n"
+			newconnection(0)
+			response = query(pingurl)
 		if "investor\":true" in response:
 		# if match: #if indeed an investor
-			f = open("pages/%i.txt"%matched, 'w')
+			f = open("investors/%i.txt"%matched, 'w')
 			f.write(response)
 			f.close()
 			print "finished id#%i\n"%i
